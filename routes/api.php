@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    // Get Request User's Info
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Room Resource
+    Route::apiResource('rooms', RoomController::class, ['missing' => fn () =>
+        response()->json('Error 404: No Room Found!', 404)
+    ]);
 });

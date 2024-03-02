@@ -17,8 +17,12 @@
     </head>
     <body class="font-sans antialiased">
     <!-- TALLStackUI Dialog & Toast -->
+    @persist('dialog')
     <x-ts-dialog />
+    @endpersist
+    @persist('toast')
     <x-ts-toast />
+    @endpersist
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <livewire:layout.navigation />
 
