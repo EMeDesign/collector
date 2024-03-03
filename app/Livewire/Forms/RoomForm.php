@@ -70,7 +70,7 @@ class RoomForm extends Form
 
         // Store New Image To Database
         if ($this->image) {
-            $filename = 'room'.Str::uuid().$this->image->extension();
+            $filename = Str::of('room-')->append(Str::uuid(), '.', $this->image->extension());
             $path = $this->image->storePubliclyAs(path: 'public/photos', name: $filename);
 
             // Return false When Store Failed
