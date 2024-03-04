@@ -41,6 +41,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Volt::route('/create', 'rooms.create-room')->name('create-room');
         Volt::route('/{room}/edit', 'rooms.edit-room')->name('edit-room');
     });
+
+    /* Furniture */
+    Route::prefix('furniture')->name('furniture.')->group(function () {
+        Volt::route('/', 'furniture.search-furniture')->name('search-furniture');
+        Volt::route('/create', 'furniture.create-furniture')->name('create-furniture');
+        Volt::route('/{furniture}/edit', 'furniture.edit-furniture')->name('edit-furniture');
+    });
 });
 
 require __DIR__.'/auth.php';

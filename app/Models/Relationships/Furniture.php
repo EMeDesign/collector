@@ -2,19 +2,19 @@
 
 namespace App\Models\Relationships;
 
-use App\Models\Furniture;
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-trait Room
+trait Furniture
 {
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id', 'creator');
     }
 
-    public function furniture()
+    public function room()
     {
-        return $this->hasMany(Furniture::class, 'room_id', 'id');
+        return $this->belongsTo(Room::class, 'room_id', 'id', 'room');
     }
 }

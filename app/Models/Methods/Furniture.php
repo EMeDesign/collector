@@ -4,7 +4,7 @@ namespace App\Models\Methods;
 
 use App\Models\User;
 
-trait Room
+trait Furniture
 {
     public function isCreator(?User $user = null): bool
     {

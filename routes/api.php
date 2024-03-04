@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\FurnitureController;
 use App\Http\Controllers\API\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,11 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Room Resource
-    Route::apiResource('rooms', RoomController::class, ['missing' => fn () =>
-        response()->json('Error 404: No Room Found!', 404)
-    ]);
+    Route::apiResources(
+        resources:[
+            'rooms'     => RoomController::class,
+            'furniture' => FurnitureController::class
+        ],
+        options: ['missing' => fn () => response()->json('Error 404: No Resource Found!', 404)]
+    );
 });
