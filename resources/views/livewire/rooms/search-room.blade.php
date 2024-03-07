@@ -70,19 +70,34 @@ class extends Component {
      * Delete the room.
      *
      * @param int $roomId
+     * @param bool $withFurniture
      *
      * @return void
      */
-    public function delete(int $roomId): void
+    public function delete(int $roomId, bool $withFurniture = false): void
     {
         $room = Room::findOrFail($roomId);
 
         $this->authorize('delete', $room);
 
+        if ($withFurniture) {
+            $room->furniture()->delete();
+        } else {
+            foreach ($room->furniture as $furniture) {
+                $furniture->room()->dissociate();
+                $furniture->save();
+            }
+        }
+
         $room->delete();
 
         $this->toast()
-            ->success('Success', 'Your Room Has Been Deleted!')
+            ->success(
+                'Success',
+                $withFurniture
+                    ? 'Your Room Has Been Deleted With Its Furniture!'
+                    : 'Your Room Has Been Deleted!'
+            )
             ->send();
     }
 
@@ -174,14 +189,29 @@ class extends Component {
                                     {{ __('Edit') }}
                                 </x-ts-button>
 
-                                <x-ts-button round
-                                             color="red"
-                                             icon="trash"
-                                             position="left"
-                                             wire:click="delete({{ $row->id }})"
-                                >
-                                    {{ __('Trash') }}
-                                </x-ts-button>
+                                <x-ts-dropdown position="bottom">
+                                    <x-slot:action>
+                                        <x-ts-button x-on:click="show = !show"
+                                                     round
+                                                     color="red"
+                                                     icon="trash"
+                                                     position="left"
+                                        >
+                                            {{ __('Trash') }}
+                                        </x-ts-button>
+                                    </x-slot:action>
+                                    <x-ts-dropdown.items icon="trash"
+                                                         text="{{ __('Delete Without Furniture') }}"
+                                                         wire:click="delete({{ $row->id }})"
+                                                         wire:confirm="Are you sure you want to delete this room?"
+                                    />
+                                    <x-ts-dropdown.items icon="trash"
+                                                         text="{{ __('Delete With Furniture') }}"
+                                                         wire:click="delete({{ $row->id }}, true)"
+                                                         wire:confirm="Are you sure you want to delete this room with its furniture?"
+                                                         separator
+                                    />
+                                </x-ts-dropdown>
                             </div>
                             @endinteract
                         </x-ts-table>
