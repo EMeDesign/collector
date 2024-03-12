@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Construction;
 use App\Models\Room;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -42,6 +43,34 @@ class extends Component {
     ];
 
     /**
+     * Search input.
+     *
+     * @var array|null
+     */
+    public ?array $constructionId = [];
+
+    #[Computed()]
+    public function constructions(): array
+    {
+        return Construction::query()
+            ->Creator()
+            ->orderByRaw('CONVERT(name USING GBK) ASC')
+            ->get()
+            ->map(function (Construction $construction) {
+                if ($construction->image !== null) {
+                    $construction->image = assetUrl($construction->image);
+                }
+
+                if ($construction->image === false) {
+                    unset($construction->image);
+                }
+
+                return $construction;
+            })
+            ->toArray();
+    }
+
+    /**
      * Display user's rooms.
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
@@ -50,9 +79,13 @@ class extends Component {
     public function rooms(): LengthAwarePaginator
     {
         return Room::query()
+            ->with('construction')
             ->where('user_id', auth()->user()->id)
             ->when($this->search, function (Builder $query) {
                 return $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
+            })
+            ->when($this->constructionId, function (Builder $query) {
+                return $query->whereIn('construction_id', $this->constructionId);
             })
             ->when(
                 value: in_array($this->sort['column'], ['name', 'description']),
@@ -132,6 +165,11 @@ class extends Component {
                     'label' => 'Description',
                 ],
                 [
+                    'index' => 'construction.name',
+                    'label' => 'Construction',
+                    'sortable' => false
+                ],
+                [
                     'index' => 'actions',
                     'label' => 'Actions',
                     'sortable' => false
@@ -167,6 +205,17 @@ class extends Component {
                                 {{ __('New Room') }}
                             </x-ts-button>
                         </header>
+
+                        <div class="w-1/4 sm:w-1/5">
+                            <x-ts-select.styled :options="$this->constructions"
+                                                :label="__('Construction')"
+                                                select="label:name|value:id"
+                                                placeholder="Filter with construction"
+                                                wire:model.live="constructionId"
+                                                searchable
+                                                multiple
+                            />
+                        </div>
 
                         <x-ts-table :$headers :$rows :$sort striped filter paginate id="rooms">
                             @interact('column_image', $row)
