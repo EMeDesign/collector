@@ -34,11 +34,15 @@ new class extends Component
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('rooms.search-room')" :active="request()->routeIs('rooms')" wire:navigate>
+                    <x-nav-link :href="route('constructions.search-construction')" :active="request()->routeIs('*construction')" wire:navigate>
+                        {{ __('Constructions') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('rooms.search-room')" :active="request()->routeIs('*room')" wire:navigate>
                         {{ __('Rooms') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('furniture.search-furniture')" :active="request()->routeIs('furniture')" wire:navigate>
+                    <x-nav-link :href="route('furniture.search-furniture')" :active="request()->routeIs('*furniture')" wire:navigate>
                         {{ __('Furniture') }}
                     </x-nav-link>
                 </div>
@@ -93,11 +97,15 @@ new class extends Component
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('rooms.search-room')" :active="request()->routeIs('rooms')" wire:navigate>
+            <x-responsive-nav-link :href="route('constructions.search-construction')" :active="request()->routeIs('*construction')" wire:navigate>
+                {{ __('Constructions') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('rooms.search-room')" :active="request()->routeIs('*room')" wire:navigate>
                 {{ __('Rooms') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('furniture.search-furniture')" :active="request()->routeIs('furniture')" wire:navigate>
+            <x-responsive-nav-link :href="route('furniture.search-furniture')" :active="request()->routeIs('*furniture')" wire:navigate>
                 {{ __('Furniture') }}
             </x-responsive-nav-link>
         </div>

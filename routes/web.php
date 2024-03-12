@@ -35,6 +35,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /* Dashboard */
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
+    /* Constructions */
+    Route::prefix('constructions')->name('constructions.')->group(function () {
+        Volt::route('/', 'constructions.search-construction')->name('search-construction');
+        Volt::route('/create', 'constructions.create-construction')->name('create-construction');
+        Volt::route('/{construction}/edit', 'constructions.edit-construction')->name('edit-construction');
+    });
+
     /* Rooms */
     Route::prefix('rooms')->name('rooms.')->group(function () {
         Volt::route('/', 'rooms.search-room')->name('search-room');

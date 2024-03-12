@@ -22,7 +22,7 @@ class RoomController extends Controller
 
         return RoomResource::collection(
             Room::query()
-                ->where('user_id', auth()->user()->id)
+                ->Creator()
                 ->orderBy('position')
                 ->get()
         );
