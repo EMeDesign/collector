@@ -12,6 +12,6 @@ trait Room
             $user = auth()->user();
         }
 
-        return $this->creator->id === $user->id;
+        return $user->is($this->creator);
     }
 }

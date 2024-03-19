@@ -18,7 +18,9 @@ class FurniturePolicy
 
     public function view(User $user, Furniture $furniture): Response
     {
-        return $user->id === $furniture->user_id
+        $furniture->loadMissing('creator');
+
+        return $user->is($furniture->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }
@@ -30,14 +32,18 @@ class FurniturePolicy
 
     public function update(User $user, Furniture $furniture): Response
     {
-        return $user->id === $furniture->user_id
+        $furniture->loadMissing('creator');
+
+        return $user->is($furniture->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }
 
     public function delete(User $user, Furniture $furniture): Response
     {
-        return $user->id === $furniture->user_id
+        $furniture->loadMissing('creator');
+
+        return $user->is($furniture->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }

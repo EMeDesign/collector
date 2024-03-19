@@ -38,7 +38,9 @@ class ItemPolicy
      */
     public function view(User $user, Item $item): Response
     {
-        return $item->creator()->is($user)
+        $item->loadMissing('creator');
+
+        return $user->is($item->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }
@@ -65,7 +67,9 @@ class ItemPolicy
      */
     public function update(User $user, Item $item): Response
     {
-        return $item->creator()->is($user)
+        $item->loadMissing('creator');
+
+        return $user->is($item->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }
@@ -80,7 +84,9 @@ class ItemPolicy
      */
     public function delete(User $user, Item $item): Response
     {
-        return $item->creator()->is($user)
+        $item->loadMissing('creator');
+
+        return $user->is($item->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }

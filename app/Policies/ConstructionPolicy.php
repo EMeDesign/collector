@@ -36,7 +36,9 @@ class ConstructionPolicy
      */
     public function view(User $user, Construction $construction): Response
     {
-        return $construction->creator()->is($user)
+        $construction->loadMissing('creator');
+
+        return $user->is($construction->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }
@@ -63,7 +65,9 @@ class ConstructionPolicy
      */
     public function update(User $user, Construction $construction): Response
     {
-        return $construction->creator()->is($user)
+        $construction->loadMissing('creator');
+
+        return $user->is($construction->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }
@@ -78,7 +82,9 @@ class ConstructionPolicy
      */
     public function delete(User $user, Construction $construction): Response
     {
-        return $construction->creator()->is($user)
+        $construction->loadMissing('creator');
+
+        return $user->is($construction->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }

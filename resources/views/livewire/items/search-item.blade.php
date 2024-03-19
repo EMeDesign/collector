@@ -80,7 +80,6 @@ class extends Component {
     public function Items(): LengthAwarePaginator
     {
         return Item::query()
-            ->with('furniture', 'unit')
             ->where('user_id', auth()->user()->id)
             ->when($this->search, function (Builder $query) {
                 return $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
@@ -98,11 +97,9 @@ class extends Component {
                 })
             ->paginate(perPage: $this->quantity)
             ->through(function (Item $item) {
-                $item->quantity = $item->quantity . ' ' . $item->unit->name;
-                return $item;
+                return $item->transQuantityToString();
             })
             ->withQueryString();
-
     }
 
     /**

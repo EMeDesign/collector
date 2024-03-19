@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait Construction
 {
-
     /**
      * Get the creator of the construction.
      *

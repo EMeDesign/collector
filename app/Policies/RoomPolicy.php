@@ -18,7 +18,9 @@ class RoomPolicy
 
     public function view(User $user, Room $room): Response
     {
-        return $user->id === $room->user_id
+        $room->loadMissing('creator');
+
+        return $user->is($room->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }
@@ -30,14 +32,18 @@ class RoomPolicy
 
     public function update(User $user, Room $room): Response
     {
-        return $user->id === $room->user_id
+        $room->loadMissing('creator');
+
+        return $user->is($room->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }
 
     public function delete(User $user, Room $room): Response
     {
-        return $user->id === $room->user_id
+        $room->loadMissing('creator');
+
+        return $user->is($room->creator)
             ? Response::allow()
             : Response::denyWithStatus('403', 'Permission Denied');
     }

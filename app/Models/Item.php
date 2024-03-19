@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory;
+    use Methods\Item;
     use Scopes\Item;
     use Relationships\Item;
 
