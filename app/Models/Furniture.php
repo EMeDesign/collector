@@ -10,6 +10,7 @@ class Furniture extends Model
     use HasFactory;
     use Methods\Furniture;
     use Relationships\Furniture;
+    use Scopes\Furniture;
 
     /**
      * The attributes that should be cast.

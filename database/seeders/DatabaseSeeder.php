@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             ConstructionSeeder::class,
             RoomSeeder::class,
             FurnitureSeeder::class,
+            UnitSeeder::class,
         ]);
     }
 }

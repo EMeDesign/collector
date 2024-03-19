@@ -55,6 +55,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Volt::route('/create', 'furniture.create-furniture')->name('create-furniture');
         Volt::route('/{furniture}/edit', 'furniture.edit-furniture')->name('edit-furniture');
     });
+
+    /* Items */
+    Route::prefix('items')->name('items.')->group(function () {
+        Volt::route('/', 'items.search-item')->name('search-item');
+        Volt::route('/create', 'items.create-item')->name('create-item');
+        Volt::route('/{item}/edit', 'items.edit-item')->name('edit-item');
+    });
 });
 
 require __DIR__.'/auth.php';
