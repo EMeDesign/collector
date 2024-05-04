@@ -62,6 +62,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Volt::route('/create', 'items.create-item')->name('create-item');
         Volt::route('/{item}/edit', 'items.edit-item')->name('edit-item');
     });
+
+    /* Friends */
+    Route::prefix('friends')->name('friends.')->group(function () {
+        Volt::route('/', 'friends.search-friend')->name('search-friend');
+        Volt::route('/create', 'friends.create-friend')->name('create-friend');
+        Volt::route('/friendship-sent', 'friends.search-friendship-sent')->name('search-friendship-sent');
+        Volt::route('/friendship-received', 'friends.search-friendship-received')->name('search-friendship-received');
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Multicaret\Acquaintances\Traits\Friendable;
 
 class User extends Authenticatable
 {
+    use Friendable;
     use HasApiTokens, HasFactory, Notifiable;
+    use Methods\User;
     use Relationships\User;
 
     /**
