@@ -16,5 +16,6 @@ class Room extends Model
         'image',
         'description',
         'position',
+        'construction_id',
     ];
 }
