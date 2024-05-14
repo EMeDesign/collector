@@ -3,9 +3,12 @@
 namespace App\Models\Relationships;
 
 use App\Models\Furniture;
+use App\Models\Keyword;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\UserKeyword;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait Item
 {
@@ -38,5 +41,16 @@ trait Item
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
+
+    /**
+     * Get the Keywords of the item.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function keywords(): BelongsToMany
+    {
+        return $this->belongsToMany(Keyword::class, 'user_keyword', 'item_id', 'keyword_id')
+            ->using(UserKeyword::class);
     }
 }

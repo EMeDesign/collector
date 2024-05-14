@@ -5,7 +5,10 @@ namespace App\Models\Relationships;
 use App\Models\Construction;
 use App\Models\Furniture;
 use App\Models\Item;
+use App\Models\Keyword;
 use App\Models\Room;
+use App\Models\UserKeyword;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -51,5 +54,15 @@ trait User
     public function rooms(): HasMany
     {
         return $this->hasMany(Room::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the keywords which used by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
+     */
+    public function keywords(): BelongsToMany
+    {
+        return $this->belongsToMany(Keyword::class, 'user_keyword')->using(UserKeyword::class);
     }
 }

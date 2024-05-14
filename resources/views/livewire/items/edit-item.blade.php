@@ -30,7 +30,27 @@ class extends Component {
     }
 
     #[Computed()]
-    public function unitOptions()
+    public function categoryOptions(): array
+    {
+        return Category::query()
+            ->orderByRaw('CONVERT(name USING GBK) ASC')
+            ->get()
+            ->toArray();
+    }
+
+    #[Computed()]
+    #[On('new-keywords-added')]
+    public function keywordOptions(): array
+    {
+        return auth()->user()->keywords()
+            ->distinct()
+            ->get(['keyword_id', 'name'])
+            ->toArray();
+    }
+
+    #[Computed()]
+    #[On('new-unit-created')]
+    public function unitOptions(): array
     {
         return Unit::query()
             ->orderByRaw('CONVERT(name USING GBK) ASC')
@@ -56,15 +76,6 @@ class extends Component {
 
                 return $furniture;
             })
-            ->toArray();
-    }
-
-    #[Computed()]
-    public function categoryOptions()
-    {
-        return Category::query()
-            ->orderByRaw('CONVERT(name USING GBK) ASC')
-            ->get()
             ->toArray();
     }
 
@@ -194,6 +205,20 @@ class extends Component {
                                                 required
                                                 searchable
                             />
+
+                            <x-ts-select.styled label="Select Some Keywords To Bind"
+                                                hint="You can choose no more than five"
+                                                :options="$this->keywordOptions"
+                                                select="label:name|value:keyword_id"
+                                                wire:model.live="form.keywords"
+                                                invalidate
+                                                searchable
+                                                multiple
+                            >
+                                <x-slot:after>
+                                    <livewire:new-keyword-button />
+                                </x-slot:after>
+                            </x-ts-select.styled>
 
                             <x-ts-date label="Obtained Date"
                                        hint="Select your Obtained Date"

@@ -3,14 +3,14 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Item;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class ItemForm extends Form
 {
+    use UploadFile;
+
     #[Validate(rule: 'required|string|between:1,255', onUpdate: false)]
     public string $name;
 
@@ -32,58 +32,20 @@ class ItemForm extends Form
     #[Validate(rule: 'required|int|numeric|exists:categories,id', onUpdate: false)]
     public int $category_id;
 
+    #[Validate(rule: ['keywords' => 'sometimes|array', 'keywords.*' => 'int|numeric|exists:keywords,id'], onUpdate: false)]
+    public array $keywords;
+
     #[Validate(rule: 'nullable|date', onUpdate: false)]
     public $obtained_at;
 
     #[Validate(rule: 'nullable|date', onUpdate: false)]
     public $expired_at;
 
-    /**
-     * Delete upload file.
-     *
-     * @param array $content
-     *
-     * @return void
-     */
-    public function deleteUpload(array $content): void
-    {
-        /*
-         the $content contains:
-         [
-             'temporary_name',
-             'real_name',
-             'extension',
-             'size',
-             'path',
-             'url',
-         ]
-         */
-
-        if (!$this->image) {
-            return;
-        }
-
-        $files = Arr::wrap($this->image);
-
-        /** @var UploadedFile $file */
-        $file = collect($files)->filter(fn (UploadedFile $item) => $item->getFilename() === $content['temporary_name'])->first();
-
-        // 1. Here we delete the file. Even if we have a error here, we simply
-        // ignore it because as long as the file is not persisted, it is
-        // temporary and will be deleted at some point if there is a failure here.
-        rescue(fn () => $file->delete(), report: false);
-
-        $collect = collect($files)->filter(fn (UploadedFile $item) => $item->getFilename() !== $content['temporary_name']);
-
-        // 2. We guarantee restore of remaining files regardless of upload
-        // type, whether you are dealing with multiple or single uploads
-        $this->image = is_array($this->image) ? $collect->toArray() : $collect->first();
-    }
-
     public function setForm(Item $item)
     {
         $item->image = null;
         $this->fill($item);
+        $this->keywords = $item->keywords->pluck('id')->toArray();
     }
 
     public function save(?int $itemId = null): bool
@@ -106,6 +68,10 @@ class ItemForm extends Form
         }
 
         auth()->user()->items()->updateOrCreate(['id' => $itemId], $validated);
+
+        auth()->user()->keywords()->wherePivot('item_id', '=', $itemId)->detach();
+
+        auth()->user()->keywords()->attach($this->keywords, ['item_id' => $itemId]);
 
         return true;
     }
