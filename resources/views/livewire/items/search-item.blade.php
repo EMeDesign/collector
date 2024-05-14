@@ -118,7 +118,7 @@ class extends Component {
         $item->delete();
 
         $this->toast()
-            ->success('Success', 'Your Item Has Been Deleted!')
+            ->success(trans('tallstackui.success'), trans('item.deleted-success'))
             ->send();
     }
 
@@ -137,29 +137,29 @@ class extends Component {
                 ],
                 [
                     'index' => 'quantity',
-                    'label' => 'Quantity',
+                    'label' => trans('item.quantity-table'),
                 ],
                 [
                     'index' => 'image',
-                    'label' => 'Image',
+                    'label' => trans('item.image-table'),
                     'sortable' => false
                 ],
                 [
                     'index' => 'name',
-                    'label' => 'name',
+                    'label' => trans('item.name-table'),
                 ],
                 [
                     'index' => 'description',
-                    'label' => 'Description',
+                    'label' => trans('item.description-table'),
                 ],
                 [
                     'index' => 'furniture.name',
-                    'label' => 'Furniture',
+                    'label' => trans('item.furniture-table'),
                     'sortable' => false
                 ],
                 [
                     'index' => 'actions',
-                    'label' => 'Actions',
+                    'label' => trans('tallstackui.actions'),
                     'sortable' => false
                 ],
             ],
@@ -172,7 +172,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Items') }}
+            {{ __('item.items') }}
         </h2>
     </x-slot>
 
@@ -183,22 +183,22 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Items Information') }}
+                                {{ __('item.item-information') }}
                             </h2>
                             <x-ts-button class="mt-5 mb-5"
                                          type="button"
                                          href="{{ route('items.create-item') }}"
                                          round
                                          wire:navigate.hover>
-                                {{ __('New Item') }}
+                                {{ __('item.new-item') }}
                             </x-ts-button>
                         </header>
 
                         <div class="w-1/4 sm:w-1/5">
                             <x-ts-select.styled :options="$this->furniture"
-                                                :label="__('Furniture')"
+                                                :label="__('item.furniture')"
                                                 select="label:name|value:id"
-                                                placeholder="Filter with furniture"
+                                                placeholder="{{ __('item.filter-with-furniture') }}"
                                                 wire:model.live="furnitureId"
                                                 searchable
                                                 multiple
@@ -208,9 +208,9 @@ class extends Component {
                         <x-ts-table :$headers :$rows :$sort striped filter paginate id="items">
                             @interact('column_image', $row)
                             @if($row->image)
-                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="Image"/>
+                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="{{ __('item.image') }}"/>
                             @else
-                                {{ __('No Available Image') }}
+                                {{ __('item.no-image') }}
                             @endif
 
                             @endinteract
@@ -223,7 +223,7 @@ class extends Component {
                                              href="{{ route('items.edit-item', ['item' => $row]) }}"
                                              wire:navigate.hover
                                 >
-                                    {{ __('Edit') }}
+                                    {{ __('tallstackui.edit') }}
                                 </x-ts-button>
 
                                 <x-ts-button round
@@ -231,9 +231,9 @@ class extends Component {
                                              icon="trash"
                                              position="left"
                                              wire:click="delete({{ $row->id }})"
-                                             wire:confirm="Are you sure you want to delete this item?"
+                                             wire:confirm="{{ __('item.delete-confirm') }}"
                                 >
-                                    {{ __('Trash') }}
+                                    {{ __('tallstackui.trash') }}
                                 </x-ts-button>
                             </div>
                             @endinteract
