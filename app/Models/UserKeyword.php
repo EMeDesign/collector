@@ -26,7 +26,7 @@ class UserKeyword extends Pivot
      *
      * @var string
      */
-    protected $table = 'user_keywords';
+    protected $table = 'user_keyword';
 
     /**
      * Indicates if the IDs are auto-incrementing.

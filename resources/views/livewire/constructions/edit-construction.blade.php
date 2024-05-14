@@ -42,7 +42,7 @@ class extends Component {
         $this->form->deleteUpload($content);
 
         $this->toast()
-            ->success('Success', 'File Deleted!')
+            ->success(trans('tallstackui.success'), trans('tallstackui.file-deleted'))
             ->send();
     }
 
@@ -58,11 +58,11 @@ class extends Component {
         if ($this->form->save($this->construction->id)) {
             $this->redirect('/constructions', navigate: true);
             $this->toast()
-                ->success('Success', 'Your Construction Has Been Updated!')
+                ->success(trans('tallstackui.success'), trans('construction.updated-success'))
                 ->send();
         } else {
             $this->toast()
-                ->error('Error', 'Your Construction Updated Failed!')
+                ->error(trans('tallstackui.error'), trans('construction.updated-failed'))
                 ->send();
         }
     }
@@ -71,7 +71,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Constructions') }}
+            {{ __('construction.constructions') }}
         </h2>
     </x-slot>
 
@@ -82,38 +82,39 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Construction Information') }}
+                                {{ __('construction.construction-information') }}
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                {{ __("Edit your construction's information.") }}
+                                {{ __("construction.edit-your-construction") }}
                             </p>
                         </header>
 
                         <x-ts-errors/>
 
                         <form class="mt-6 space-y-6" wire:submit="edit({{ $this->construction->id }})">
-                            <x-ts-upload label="Image"
-                                         hint="We need to analyze your image"
-                                         tip="Drag and drop your image here"
+                            <x-ts-upload label="{{ __('construction.image') }}"
+                                         hint="{{ __('tallstackui.need-analyze-image') }}"
+                                         tip="{{ __('tallstackui.drag-and-drop-image') }}"
+                                         :placeholder="__('tallstackui.choose-file')"
                                          accept="image/*"
                                          delete
                                          wire:model="form.image"
                             />
 
-                            <x-ts-input label="Name *" hint="Insert the construction name" wire:model="form.name"/>
+                            <x-ts-input label="{{ __('construction.name') }}" hint="{{ __('construction.insert-name') }}" wire:model="form.name"/>
 
-                            <x-ts-input label="Location *" hint="Insert the construction location" wire:model="form.location"/>
+                            <x-ts-input label="{{ __('construction.location') }}" hint="{{ __('construction.insert-location') }}" wire:model="form.location"/>
 
-                            <x-ts-input label="Description *" hint="Insert the construction description"
+                            <x-ts-input label="{{ __('construction.description') }}" hint="{{ __('construction.insert-description') }}"
                                         wire:model="form.description"/>
 
-                            <x-ts-number label="Position *" hint="Insert the room position" min="0"
+                            <x-ts-number label="{{ __('construction.position') }}" hint="{{ __('construction.insert-position') }}" min="0"
                                          wire:model="form.position"/>
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>
-                                    {{ __('Save') }}
+                                    {{ __('tallstackui.save') }}
                                 </x-primary-button>
                             </div>
                         </form>

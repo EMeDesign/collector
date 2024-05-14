@@ -96,10 +96,10 @@ class extends Component {
 
         $this->toast()
             ->success(
-                'Success',
+                trans('tallstackui.success'),
                 $withRooms
-                    ? 'Your Construction Has Been Deleted With Its Rooms!'
-                    : 'Your Construction Has Been Deleted!'
+                    ? trans('construction.deleted-with-rooms')
+                    : trans('construction.deleted-success')
             )
             ->send();
     }
@@ -153,7 +153,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Constructions') }}
+            {{ __('construction.constructions') }}
         </h2>
     </x-slot>
 
@@ -164,23 +164,23 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Constructions Information') }}
+                                {{ __('construction.construction-information') }}
                             </h2>
                             <x-ts-button class="mt-5 mb-5"
                                          type="button"
                                          href="{{ route('constructions.create-construction') }}"
                                          round
                                          wire:navigate.hover>
-                                {{ __('New Construction') }}
+                                {{ __('construction.new-construction') }}
                             </x-ts-button>
                         </header>
 
                         <x-ts-table :$headers :$rows :$sort striped filter paginate id="constructions">
                             @interact('column_image', $row)
                             @if($row->image)
-                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="Image"/>
+                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="{{ __('construction.image') }}"/>
                             @else
-                                {{ __('No Available Image') }}
+                                {{ __('construction.no-image') }}
                             @endif
                             @endinteract
                             @interact('column_actions', $row)
@@ -192,7 +192,7 @@ class extends Component {
                                              href="{{ route('constructions.edit-construction', ['construction' => $row]) }}"
                                              wire:navigate.hover
                                 >
-                                    {{ __('Edit') }}
+                                    {{ __('tallstackui.edit') }}
                                 </x-ts-button>
 
                                 <x-ts-dropdown position="bottom">
@@ -203,18 +203,18 @@ class extends Component {
                                                      icon="trash"
                                                      position="left"
                                         >
-                                            {{ __('Trash') }}
+                                            {{ __('tallstackui.trash') }}
                                         </x-ts-button>
                                     </x-slot:action>
                                     <x-ts-dropdown.items icon="trash"
-                                                         text="{{ __('Delete Without Rooms') }}"
+                                                         text="{{ __('construction.delete-without-rooms') }}"
                                                          wire:click="delete({{ $row->id }})"
-                                                         wire:confirm="Are you sure you want to delete this construction?"
+                                                         wire:confirm="{{ __('construction.delete-without-rooms-confirm') }}"
                                     />
                                     <x-ts-dropdown.items icon="trash"
-                                                         text="{{ __('Delete With Rooms') }}"
+                                                         text="{{ __('construction.delete-with-rooms') }}"
                                                          wire:click="delete({{ $row->id }}, true)"
-                                                         wire:confirm="Are you sure you want to delete this construction with its rooms?"
+                                                         wire:confirm="{{ __('construction.delete-with-rooms-confirm') }}"
                                                          separator
                                     />
                                 </x-ts-dropdown>
