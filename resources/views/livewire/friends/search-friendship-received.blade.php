@@ -52,10 +52,10 @@ class extends Component {
     public function statusOptions(): array
     {
         return [
-            ['status' => Status::PENDING,  'label' => 'Pending'],
-            ['status' => Status::ACCEPTED, 'label' => 'Accepted'],
-            ['status' => Status::DENIED,   'label' => 'Denied'],
-            ['status' => Status::BLOCKED,  'label' => 'Blocked'],
+            ['status' => Status::PENDING,  'label' => trans('friend.pending')],
+            ['status' => Status::ACCEPTED, 'label' => trans('friend.accepted')],
+            ['status' => Status::DENIED,   'label' => trans('friend.denied')],
+            ['status' => Status::BLOCKED,  'label' => trans('friend.blocked')],
         ];
     }
 
@@ -82,7 +82,7 @@ class extends Component {
         auth()->user()->acceptFriendRequest($sender);
 
         $this->toast()
-            ->success('Success', "Your Accept Friend Request From $sender->name Successfully!")
+            ->success(trans('tallstackui.success'), trans('friend.accept-success', ['name' => $sender->name]))
             ->send();
     }
 
@@ -98,7 +98,7 @@ class extends Component {
         auth()->user()->denyFriendRequest($sender);
 
         $this->toast()
-            ->success('Success', "Your Deny Friend Request From $sender->name Successfully!")
+            ->success(trans('tallstackui.success'), trans('friend.deny-success', ['name' => $sender->name]))
             ->send();
     }
 
@@ -117,23 +117,23 @@ class extends Component {
                 ],
                 [
                     'index' => 'sender.name',
-                    'label' => 'name',
+                    'label' => trans('friend.name-table'),
                 ],
                 [
                     'index' => 'sender.email',
-                    'label' => 'email',
+                    'label' => trans('friend.email-table'),
                 ],
                 [
                     'index' => 'status',
-                    'label' => 'status',
+                    'label' => trans('friend.status-table'),
                 ],
                 [
                     'index' => 'created_at',
-                    'label' => 'request date',
+                    'label' => trans('friend.request-date'),
                 ],
                 [
                     'index' => 'actions',
-                    'label' => 'Actions',
+                    'label' => trans('tallstackui.actions'),
                     'sortable' => false
                 ],
             ],
@@ -146,7 +146,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Friends') }}
+            {{ __('friend.friends') }}
         </h2>
     </x-slot>
 
@@ -157,14 +157,14 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Received Friendships Information') }}
+                                {{ __('friend.sent-friend-information') }}
                             </h2>
                             <x-ts-button class="mt-5 mb-5"
                                          type="button"
                                          href="{{ route('friends.create-friend') }}"
                                          round
                                          wire:navigate.hover>
-                                {{ __('New Friend') }}
+                                {{ __('friend.new-friend') }}
                             </x-ts-button>
                         </header>
 
@@ -172,7 +172,7 @@ class extends Component {
                             <x-ts-select.styled :options="$this->statusOptions"
                                                 :label="'Status'"
                                                 select="label:label|value:status"
-                                                placeholder="Filter with status"
+                                                placeholder="{{ __('friend.filter-with-status') }}"
                                                 wire:model.live="status"
                             />
                         </div>
@@ -194,7 +194,7 @@ class extends Component {
                                                  position="left"
                                                  wire:click="accept({{ $row->sender_id }})"
                                     >
-                                        {{ __('Accept') }}
+                                        {{ __('friend.accept') }}
                                     </x-ts-button>
 
                                     <x-ts-button round
@@ -203,7 +203,7 @@ class extends Component {
                                                  position="left"
                                                  wire:click="deny({{ $row->sender_id }})"
                                     >
-                                        {{ __('Deny') }}
+                                        {{ __('friend.deny') }}
                                     </x-ts-button>
                                 </div>
                             @endif

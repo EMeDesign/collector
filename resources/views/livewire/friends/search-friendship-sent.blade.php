@@ -52,10 +52,10 @@ class extends Component {
     public function statusOptions(): array
     {
         return [
-            ['status' => Status::PENDING,  'label' => 'Pending'],
-            ['status' => Status::ACCEPTED, 'label' => 'Accepted'],
-            ['status' => Status::DENIED,   'label' => 'Denied'],
-            ['status' => Status::BLOCKED,  'label' => 'Blocked'],
+            ['status' => Status::PENDING,  'label' => trans('friend.pending')],
+            ['status' => Status::ACCEPTED, 'label' => trans('friend.accepted')],
+            ['status' => Status::DENIED,   'label' => trans('friend.denied')],
+            ['status' => Status::BLOCKED,  'label' => trans('friend.blocked')],
         ];
     }
 
@@ -85,19 +85,19 @@ class extends Component {
                 ],
                 [
                     'index' => 'recipient.name',
-                    'label' => 'name',
+                    'label' => trans('friend.name-table'),
                 ],
                 [
                     'index' => 'recipient.email',
-                    'label' => 'email',
+                    'label' => trans('friend.email-table'),
                 ],
                 [
                     'index' => 'status',
-                    'label' => 'status',
+                    'label' => trans('friend.status-table'),
                 ],
                 [
                     'index' => 'created_at',
-                    'label' => 'request date',
+                    'label' => trans('friend.request-date'),
                 ],
             ],
 
@@ -109,7 +109,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Friends') }}
+            {{ __('friend.friends') }}
         </h2>
     </x-slot>
 
@@ -127,7 +127,7 @@ class extends Component {
                                          href="{{ route('friends.create-friend') }}"
                                          round
                                          wire:navigate.hover>
-                                {{ __('New Friend') }}
+                                {{ __('friend.new-friend') }}
                             </x-ts-button>
                         </header>
 
@@ -135,7 +135,7 @@ class extends Component {
                             <x-ts-select.styled :options="$this->statusOptions"
                                                 :label="'Status'"
                                                 select="label:label|value:status"
-                                                placeholder="Filter with status"
+                                                placeholder="{{ __('friend.filter-with-status') }}"
                                                 wire:model.live="status"
                             />
                         </div>

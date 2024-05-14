@@ -46,7 +46,7 @@ class extends Component {
         // check if self request
         if ($recipient->is($sender)) {
             $this->toast()
-                ->error('Error', "You Cannot Send Request To Yourself!")
+                ->error(trans('tallstackui.error'), trans('friend.cannot-send-self'))
                 ->send();
             return;
         }
@@ -54,7 +54,7 @@ class extends Component {
         // check if already friends
         if ($sender->isFriendWith($recipient)) {
             $this->toast()
-                ->error('Error', "You Have Already The Friend Of $recipient->name!")
+                ->error(trans('tallstackui.error'), trans('friend.already-friend', ['name' => $recipient->name]))
                 ->send();
             return;
         }
@@ -62,7 +62,7 @@ class extends Component {
         // check if repeat
         if ($sender->hasSentFriendRequestTo($recipient)) {
             $this->toast()
-                ->error('Error', "You Have Already Sent Request To $recipient->name!")
+                ->error(trans('tallstackui.error'),  trans('friend.already-send-request', ['name' => $recipient->name]))
                 ->send();
             return;
         }
@@ -70,7 +70,7 @@ class extends Component {
         // check if repeat (reverse)
         if ($recipient->hasSentFriendRequestTo($sender)) {
             $this->toast()
-                ->error('Error', "$recipient->name Have Already Sent Request To You!")
+                ->error(trans('tallstackui.error'), trans('friend.already-send-request-rev', ['name' => $recipient->name]))
                 ->send();
             return;
         }
@@ -78,7 +78,7 @@ class extends Component {
         //check if already denied
         if ($sender->hasBennDeniedBy($recipient)) {
             $this->toast()
-                ->error('Error', "You Have Already Been Denied By $recipient->name!")
+                ->error(trans('tallstackui.error'), trans('friend.already-denied', ['name' => $recipient->name]))
                 ->send();
             return;
         }
@@ -87,7 +87,7 @@ class extends Component {
         $sender->befriend($recipient);
 
         $this->toast()
-            ->success('Success', "Your Have Sent A Request To $recipient->name!")
+            ->success(trans('tallstackui.success'), trans('friend.send-success', ['name' => $recipient->name]))
             ->flash()
             ->send();
 
@@ -98,7 +98,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Friends') }}
+            {{ __('friend.friends') }}
         </h2>
     </x-slot>
 
@@ -109,28 +109,29 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Friend Request') }}
+                                {{ __('friend.friend-request') }}
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                {{ __("Send a friend request to Someone.") }}
+                                {{ __('friend.send-new-friend-request') }}
                             </p>
                         </header>
 
                         <x-ts-errors/>
 
                         <form class="mt-6 space-y-6" wire:submit="create()">
-                            <x-ts-select.styled label="Select Someone To Send Request"
-                                                hint="You can choose only one"
+                            <x-ts-select.styled label="{{ __('friend.select-user-to-request') }}"
+                                                hint="{{ __('friend.choose-only-one') }}"
                                                 :options="$this->userOptions"
                                                 select="label:name|value:id"
                                                 wire:model.blur="recipient_id"
                                                 searchable
+                                                required
                             />
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>
-                                    {{ __('Send') }}
+                                    {{ __('tallstackui.send') }}
                                 </x-primary-button>
                             </div>
                         </form>

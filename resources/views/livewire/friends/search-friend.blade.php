@@ -67,7 +67,7 @@ class extends Component {
         auth()->user()->unfriend($friend);
 
         $this->toast()
-            ->success('Success', "Your Have Remove $friend->name From Your Friend List!")
+            ->success('Success', trans('friend.unfriend-success', ['name' => $friend->name]))
             ->send();
     }
 
@@ -86,15 +86,15 @@ class extends Component {
                 ],
                 [
                     'index' => 'name',
-                    'label' => 'name',
+                    'label' => trans('friend.name-table'),
                 ],
                 [
                     'index' => 'email',
-                    'label' => 'email',
+                    'label' => trans('friend.email-table'),
                 ],
                 [
                     'index' => 'actions',
-                    'label' => 'Actions',
+                    'label' => trans('tallstackui.actions'),
                     'sortable' => false
                 ],
             ],
@@ -107,7 +107,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Friends') }}
+            {{ __('friend.friends') }}
         </h2>
     </x-slot>
 
@@ -118,14 +118,14 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Friends Information') }}
+                                {{ __('friend.friend-information') }}
                             </h2>
                             <x-ts-button class="mt-5 mb-5"
                                          type="button"
                                          href="{{ route('friends.create-friend') }}"
                                          round
                                          wire:navigate.hover>
-                                {{ __('New Friend') }}
+                                {{ __('friend.new-friend') }}
                             </x-ts-button>
                         </header>
 
@@ -138,7 +138,7 @@ class extends Component {
                                              position="left"
                                              wire:click="unfriend({{ $row->id }})"
                                 >
-                                    {{ __('Unfriend') }}
+                                    {{ __('friend.unfriend') }}
                                 </x-ts-button>
                             </div>
                             @endinteract
