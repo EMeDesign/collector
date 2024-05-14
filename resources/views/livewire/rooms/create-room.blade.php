@@ -27,7 +27,7 @@ class extends Component {
         $this->form->deleteUpload($content);
 
         $this->toast()
-            ->success('Success', 'File Deleted!')
+            ->success(trans('tallstackui.success'), trans('tallstackui.file-deleted'))
             ->send();
     }
 
@@ -43,11 +43,11 @@ class extends Component {
         if ($this->form->save()) {
             $this->redirect('/rooms', navigate: true);
             $this->toast()
-                ->success('Success', 'Your Room Has Been Created!')
+                ->success(trans('tallstackui.success'), trans('room.created-success'))
                 ->send();
         } else {
             $this->toast()
-                ->error('Error', 'Your Room Created Failed!')
+                ->error(trans('tallstackui.error'), trans('room.created-failed'))
                 ->send();
         }
     }
@@ -56,7 +56,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Rooms') }}
+            {{ __('room.rooms') }}
         </h2>
     </x-slot>
 
@@ -67,36 +67,37 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Room Information') }}
+                                {{ __('room.room-information') }}
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                {{ __("Create your new room") }}
+                                {{ __('room.create-your-room') }}
                             </p>
                         </header>
 
                         <x-ts-errors/>
 
                         <form class="mt-6 space-y-6" wire:submit="create()">
-                            <x-ts-upload label="Image"
-                                         hint="We need to analyze your image"
-                                         tip="Drag and drop your image here"
+                            <x-ts-upload label="{{ __('room.image') }}"
+                                         hint="{{ __('tallstackui.need-analyze-image') }}"
+                                         tip="{{ __('tallstackui.drag-and-drop-image') }}"
+                                         :placeholder="__('tallstackui.choose-file')"
                                          accept="image/*"
                                          delete
                                          wire:model="form.image"
                             />
 
-                            <x-ts-input label="Name *" hint="Insert the room name" wire:model="form.name"/>
+                            <x-ts-input label="{{ __('room.name') }}" hint="{{ __('room.insert-name') }}" wire:model="form.name"/>
 
-                            <x-ts-input label="Description *" hint="Insert the room description"
+                            <x-ts-input label="{{ __('room.description') }}" hint="{{ __('room.insert-description') }}"
                                         wire:model="form.description"/>
 
-                            <x-ts-number label="Position *" hint="Insert the room position" min="0"
+                            <x-ts-number label="{{ __('room.position') }}" hint="{{ __('room.insert-position') }}" min="0"
                                          wire:model="form.position"/>
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>
-                                    {{ __('Save') }}
+                                    {{ __('tallstackui.save') }}
                                 </x-primary-button>
                             </div>
                         </form>

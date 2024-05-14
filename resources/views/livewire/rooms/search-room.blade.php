@@ -126,10 +126,10 @@ class extends Component {
 
         $this->toast()
             ->success(
-                'Success',
+                trans('tallstackui.success'),
                 $withFurniture
-                    ? 'Your Room Has Been Deleted With Its Furniture!'
-                    : 'Your Room Has Been Deleted!'
+                    ? trans('room.deleted-with-furniture')
+                    : trans('room.deleted-success')
             )
             ->send();
     }
@@ -149,29 +149,29 @@ class extends Component {
                 ],
                 [
                     'index' => 'position',
-                    'label' => 'Position',
+                    'label' => trans('room.position-table'),
                 ],
                 [
                     'index' => 'image',
-                    'label' => 'Image',
+                    'label' => trans('room.image-table'),
                     'sortable' => false
                 ],
                 [
                     'index' => 'name',
-                    'label' => 'name',
+                    'label' => trans('room.name-table'),
                 ],
                 [
                     'index' => 'description',
-                    'label' => 'Description',
+                    'label' => trans('room.description-table'),
                 ],
                 [
                     'index' => 'construction.name',
-                    'label' => 'Construction',
+                    'label' => trans('room.construction-table'),
                     'sortable' => false
                 ],
                 [
                     'index' => 'actions',
-                    'label' => 'Actions',
+                    'label' => trans('tallstackui.actions'),
                     'sortable' => false
                 ],
             ],
@@ -184,7 +184,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Rooms') }}
+            {{ __('room.rooms') }}
         </h2>
     </x-slot>
 
@@ -195,22 +195,22 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Rooms Information') }}
+                                {{ __('room.room-information') }}
                             </h2>
                             <x-ts-button class="mt-5 mb-5"
                                          type="button"
                                          href="{{ route('rooms.create-room') }}"
                                          round
                                          wire:navigate.hover>
-                                {{ __('New Room') }}
+                                {{ __('room.new-room') }}
                             </x-ts-button>
                         </header>
 
                         <div class="w-1/4 sm:w-1/5">
                             <x-ts-select.styled :options="$this->constructions"
-                                                :label="__('Construction')"
+                                                :label="__('room.construction')"
                                                 select="label:name|value:id"
-                                                placeholder="Filter with construction"
+                                                placeholder="{{ __('room.filter-with-construction') }}"
                                                 wire:model.live="constructionId"
                                                 searchable
                                                 multiple
@@ -220,9 +220,9 @@ class extends Component {
                         <x-ts-table :$headers :$rows :$sort striped filter paginate id="rooms">
                             @interact('column_image', $row)
                             @if($row->image)
-                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="Image"/>
+                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="{{ __('room.image') }}"/>
                             @else
-                                {{ __('No Available Image') }}
+                                {{ __('room.no-image') }}
                             @endif
 
                             @endinteract
@@ -235,7 +235,7 @@ class extends Component {
                                              href="{{ route('rooms.edit-room', ['room' => $row]) }}"
                                              wire:navigate.hover
                                 >
-                                    {{ __('Edit') }}
+                                    {{ __('tallstackui.edit') }}
                                 </x-ts-button>
 
                                 <x-ts-dropdown position="bottom">
@@ -246,18 +246,18 @@ class extends Component {
                                                      icon="trash"
                                                      position="left"
                                         >
-                                            {{ __('Trash') }}
+                                            {{ __('tallstackui.trash') }}
                                         </x-ts-button>
                                     </x-slot:action>
                                     <x-ts-dropdown.items icon="trash"
-                                                         text="{{ __('Delete Without Furniture') }}"
+                                                         text="{{ __('room.delete-without-furniture') }}"
                                                          wire:click="delete({{ $row->id }})"
-                                                         wire:confirm="Are you sure you want to delete this room?"
+                                                         wire:confirm="{{ __('room.delete-without-furniture-confirm') }}"
                                     />
                                     <x-ts-dropdown.items icon="trash"
-                                                         text="{{ __('Delete With Furniture') }}"
+                                                         text="{{ __('room.delete-with-furniture') }}"
                                                          wire:click="delete({{ $row->id }}, true)"
-                                                         wire:confirm="Are you sure you want to delete this room with its furniture?"
+                                                         wire:confirm="{{ __('room.delete-with-furniture-confirm') }}"
                                                          separator
                                     />
                                 </x-ts-dropdown>
