@@ -117,7 +117,7 @@ class extends Component {
         $furniture->delete();
 
         $this->toast()
-            ->success('Success', 'Your furniture Has Been Deleted!')
+            ->success(trans('tallstackui.success'), trans('furniture.deleted-success'))
             ->send();
     }
 
@@ -136,29 +136,29 @@ class extends Component {
                 ],
                 [
                     'index' => 'position',
-                    'label' => 'Position',
+                    'label' => trans('room.position-table'),
                 ],
                 [
                     'index' => 'image',
-                    'label' => 'Image',
+                    'label' => trans('furniture.image-table'),
                     'sortable' => false
                 ],
                 [
                     'index' => 'name',
-                    'label' => 'name',
+                    'label' => trans('furniture.name-table'),
                 ],
                 [
                     'index' => 'description',
-                    'label' => 'Description',
+                    'label' => trans('furniture.description-table'),
                 ],
                 [
                     'index' => 'room.name',
-                    'label' => 'Room',
+                    'label' => trans('furniture.room-table'),
                     'sortable' => false
                 ],
                 [
                     'index' => 'actions',
-                    'label' => 'Actions',
+                    'label' => trans('tallstackui.actions'),
                     'sortable' => false
                 ],
             ],
@@ -171,7 +171,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Furniture') }}
+            {{ __('furniture.furniture') }}
         </h2>
     </x-slot>
 
@@ -182,22 +182,22 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Furniture Information') }}
+                                {{ __('furniture.furniture-information') }}
                             </h2>
                             <x-ts-button class="mt-5 mb-5"
                                          type="button"
                                          href="{{ route('furniture.create-furniture') }}"
                                          round
                                          wire:navigate.hover>
-                                {{ __('New Furniture') }}
+                                {{ __('furniture.new-furniture') }}
                             </x-ts-button>
                         </header>
 
                         <div class="w-1/4 sm:w-1/5">
                             <x-ts-select.styled :options="$this->rooms"
-                                                :label="'Room'"
+                                                :label="__('furniture.room')"
                                                 select="label:name|value:id"
-                                                placeholder="Filter with room"
+                                                placeholder="{{ __('furniture.filter-with-room') }}"
                                                 wire:model.live="roomId"
                                                 searchable
                                                 multiple
@@ -207,9 +207,9 @@ class extends Component {
                         <x-ts-table :$headers :$rows :$sort striped filter paginate id="furniture">
                             @interact('column_image', $row)
                             @if($row->image)
-                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="Image"/>
+                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="{{ __('furniture.image') }}"/>
                             @else
-                                {{ __('No Available Image') }}
+                                {{ __('furniture.no-image') }}
                             @endif
 
                             @endinteract
@@ -222,7 +222,7 @@ class extends Component {
                                              href="{{ route('furniture.edit-furniture', ['furniture' => $row]) }}"
                                              wire:navigate.hover
                                 >
-                                    {{ __('Edit') }}
+                                    {{ __('tallstackui.edit') }}
                                 </x-ts-button>
 
                                 <x-ts-button round
@@ -231,7 +231,7 @@ class extends Component {
                                              position="left"
                                              wire:click="delete({{ $row->id }})"
                                 >
-                                    {{ __('Trash') }}
+                                    {{ __('tallstackui.trash') }}
                                 </x-ts-button>
                             </div>
                             @endinteract

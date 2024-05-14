@@ -66,7 +66,7 @@ class extends Component {
         $this->form->deleteUpload($content);
 
         $this->toast()
-            ->success('Success', 'File Deleted!')
+            ->success(trans('tallstackui.success'), trans('tallstackui.file-deleted'))
             ->send();
     }
 
@@ -82,11 +82,11 @@ class extends Component {
         if ($this->form->save()) {
             $this->redirect('/furniture', navigate: true);
             $this->toast()
-                ->success('Success', 'Your Furniture Has Been Created!')
+                ->success(trans('tallstackui.success'), trans('furniture.created-success'))
                 ->send();
         } else {
             $this->toast()
-                ->error('Error', 'Your Furniture Created Failed!')
+                ->error(trans('tallstackui.error'), trans('furniture.created-failed'))
                 ->send();
         }
     }
@@ -95,7 +95,7 @@ class extends Component {
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Furniture') }}
+            {{ __('furniture.furniture') }}
         </h2>
     </x-slot>
 
@@ -106,51 +106,53 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Furniture Information') }}
+                                {{ __('furniture.furniture-information') }}
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                {{ __("Create your new furniture") }}
+                                {{ __('furniture.create-your-furniture') }}
                             </p>
                         </header>
 
                         <x-ts-errors/>
 
                         <form class="mt-6 space-y-6" wire:submit="create()">
-                            <x-ts-upload label="Image"
-                                         hint="We need to analyze your image"
-                                         tip="Drag and drop your image here"
+                            <x-ts-upload label="{{ __('furniture.image') }}"
+                                         hint="{{ __('tallstackui.need-analyze-image') }}"
+                                         tip="{{ __('tallstackui.drag-and-drop-image') }}"
+                                         :placeholder="__('tallstackui.choose-file')"
                                          accept="image/*"
                                          delete
-                                         wire:model.blur="form.image"
+                                         wire:model="form.image"
                             />
 
-                            <x-ts-input label="Name *" hint="Insert the furniture name" wire:model.blur="form.name"/>
+                            <x-ts-input label="{{ __('furniture.name') }}" hint="{{ __('furniture.insert-name') }}" wire:model.blur="form.name"/>
 
-                            <x-ts-input label="Description *"
-                                        hint="Insert the furniture description"
+                            <x-ts-input label="{{ __('furniture.description') }}"
+                                        hint="{{ __('furniture.insert-description') }}"
                                         wire:model.blur="form.description"
                             />
 
-                            <x-ts-number label="Position *"
-                                         hint="Insert the furniture position"
+                            <x-ts-number label="{{ __('furniture.position') }}"
+                                         hint="{{ __('furniture.insert-position') }}"
                                          min="0"
                                          wire:model.blur="form.position"
                             />
 
-                            <x-ts-select.styled label="Select One Room To Bind"
-                                                hint="You can choose only one"
+                            <x-ts-select.styled label="{{ __('furniture.select-room-bind') }}"
+                                                hint="{{ __('furniture.choose-only-one') }}"
                                                 :options="$this->roomOptions"
                                                 select="label:name|value:id"
                                                 wire:model.blur="form.room_id"
                                                 searchable
+                                                required
                             />
 
-                            <x-ts-toggle label="Is Private" wire:model="form.is_private"/>
+                            <x-ts-toggle label="{{ __('furniture.private') }}" wire:model="form.is_private"/>
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>
-                                    {{ __('Save') }}
+                                    {{ __('tallstackui.save') }}
                                 </x-primary-button>
                             </div>
                         </form>
