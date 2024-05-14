@@ -27,7 +27,6 @@ return [
     // label
     'image' => '预览图',
     'name' => '名称 *',
-    'location' => '地理位置 *',
     'description' => '简介 *',
     'position' => '排序位置 *',
     'construction' => '建筑物',
