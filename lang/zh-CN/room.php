@@ -23,12 +23,14 @@ return [
     'insert-location' => '输入房间地理位置',
     'insert-description' => '输入房间简介',
     'insert-position' => '输入房间排序位置',
+    'choose-only-one' => '只能选择一个',
 
     // label
     'image' => '预览图',
     'name' => '名称 *',
     'description' => '简介 *',
     'position' => '排序位置 *',
+    'select-construction-bind' => '选择要绑定的建筑物 *',
     'construction' => '建筑物',
 
     // placeholder

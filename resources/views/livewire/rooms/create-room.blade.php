@@ -1,7 +1,9 @@
 <?php
 
 use App\Livewire\Forms\RoomForm;
+use App\Models\Construction;
 use App\Models\Room;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
@@ -14,6 +16,27 @@ class extends Component {
     use WithFileUploads;
 
     public RoomForm $form;
+
+    #[Computed()]
+    public function constructionOptions(): array
+    {
+        return Construction::query()
+            ->where('user_id', auth()->user()->id)
+            ->orderByRaw('CONVERT(name USING GBK) ASC')
+            ->get()
+            ->map(function (Construction $construction) {
+                if ($construction->image !== null) {
+                    $construction->image = assetUrl($construction->image);
+                }
+
+                if ($construction->image === false) {
+                    unset($construction->image);
+                }
+
+                return $construction;
+            })
+            ->toArray();
+    }
 
     /**
      * Delete upload file.
@@ -87,13 +110,24 @@ class extends Component {
                                          wire:model="form.image"
                             />
 
-                            <x-ts-input label="{{ __('room.name') }}" hint="{{ __('room.insert-name') }}" wire:model="form.name"/>
+                            <x-ts-input label="{{ __('room.name') }}" hint="{{ __('room.insert-name') }}"
+                                        wire:model="form.name"/>
 
                             <x-ts-input label="{{ __('room.description') }}" hint="{{ __('room.insert-description') }}"
                                         wire:model="form.description"/>
 
-                            <x-ts-number label="{{ __('room.position') }}" hint="{{ __('room.insert-position') }}" min="0"
+                            <x-ts-number label="{{ __('room.position') }}" hint="{{ __('room.insert-position') }}"
+                                         min="0"
                                          wire:model="form.position"/>
+
+                            <x-ts-select.styled label="{{ __('room.select-construction-bind') }}"
+                                                hint="{{ __('room.choose-only-one') }}"
+                                                :options="$this->constructionOptions"
+                                                select="label:name|value:id"
+                                                wire:model.blur="form.construction_id"
+                                                searchable
+                                                required
+                            />
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>

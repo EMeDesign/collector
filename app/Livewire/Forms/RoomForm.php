@@ -22,6 +22,9 @@ class RoomForm extends Form
     #[Validate(rule: 'required|int|numeric', onUpdate: true)]
     public int $position;
 
+    #[Validate(rule: 'required|int|numeric|exists:constructions,id', onUpdate: true)]
+    public int $construction_id;
+
     public function save(?int $roomId = null): bool
     {
         $validated = $this->validate();
