@@ -31,23 +31,23 @@ new class extends Component
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                        {{ __('navigation.dashboard') }}
                     </x-nav-link>
 
                     <x-nav-link :href="route('constructions.search-construction')" :active="request()->routeIs('*construction')" wire:navigate>
-                        {{ __('Constructions') }}
+                        {{ __('navigation.constructions') }}
                     </x-nav-link>
 
                     <x-nav-link :href="route('rooms.search-room')" :active="request()->routeIs('*room')" wire:navigate>
-                        {{ __('Rooms') }}
+                        {{ __('navigation.rooms') }}
                     </x-nav-link>
 
                     <x-nav-link :href="route('furniture.search-furniture')" :active="request()->routeIs('*furniture')" wire:navigate>
-                        {{ __('Furniture') }}
+                        {{ __('navigation.furniture') }}
                     </x-nav-link>
 
                     <x-nav-link :href="route('items.search-item')" :active="request()->routeIs('*item')" wire:navigate>
-                        {{ __('Items') }}
+                        {{ __('navigation.items') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -69,25 +69,25 @@ new class extends Component
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile')" wire:navigate>
-                            {{ __('Profile') }}
+                            {{ __('navigation.profile') }}
                         </x-dropdown-link>
 
                         <x-dropdown-link :href="route('friends.search-friend')" wire:navigate>
-                            {{ __('Friends') }}
+                            {{ __('navigation.friends') }}
                         </x-dropdown-link>
 
                         <x-dropdown-link :href="route('friends.search-friendship-received')" wire:navigate>
-                            {{ __('Received Friend Request') }}
+                            {{ __('navigation.received-friend-request') }}
                         </x-dropdown-link>
 
                         <x-dropdown-link :href="route('friends.search-friendship-sent')" wire:navigate>
-                            {{ __('Sent Friend Request') }}
+                            {{ __('navigation.sent-friend-request') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
                             <x-dropdown-link>
-                                {{ __('Log Out') }}
+                                {{ __('navigation.logout') }}
                             </x-dropdown-link>
                         </button>
                     </x-slot>
@@ -110,23 +110,23 @@ new class extends Component
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('Dashboard') }}
+                {{ __('navigation.dashboard') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('constructions.search-construction')" :active="request()->routeIs('*construction')" wire:navigate>
-                {{ __('Constructions') }}
+                {{ __('navigation.constructions') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('rooms.search-room')" :active="request()->routeIs('*room')" wire:navigate>
-                {{ __('Rooms') }}
+                {{ __('navigation.rooms') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('furniture.search-furniture')" :active="request()->routeIs('*furniture')" wire:navigate>
-                {{ __('Furniture') }}
+                {{ __('navigation.furniture') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('items.search-item')" :active="request()->routeIs('*item')" wire:navigate>
-                {{ __('Items') }}
+                {{ __('navigation.items') }}
             </x-responsive-nav-link>
         </div>
 
@@ -139,25 +139,25 @@ new class extends Component
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                    {{ __('Profile') }}
+                    {{ __('navigation.profile') }}
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('friends.search-friend')" wire:navigate>
-                    {{ __('Friends') }}
+                    {{ __('navigation.friends') }}
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('friends.search-friendship-received')" wire:navigate>
-                    {{ __('Received Friend Request') }}
+                    {{ __('navigation.received-friend-request') }}
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('friends.search-friendship-sent')" wire:navigate>
-                    {{ __('Sent Friend Request') }}
+                    {{ __('navigation.sent-friend-request') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">
                     <x-responsive-nav-link>
-                        {{ __('Log Out') }}
+                        {{ __('navigation.logout') }}
                     </x-responsive-nav-link>
                 </button>
             </div>
