@@ -24,7 +24,7 @@ return [
     'position' => '排序位置 *',
     'select-room-bind' => '选择要绑定的房间 *',
     'private' => '私人物品',
-    'room' => '建筑物',
+    'room' => '房间',
 
 
     // placeholder
