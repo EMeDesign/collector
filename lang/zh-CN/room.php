@@ -33,7 +33,7 @@ return [
     'construction' => '建筑物',
 
     // placeholder
-    'filter-with-construction' => 'Filter with construction',
+    'filter-with-construction' => '根据建筑物进行过滤',
 
     // table
     'position-table' => '位置',
