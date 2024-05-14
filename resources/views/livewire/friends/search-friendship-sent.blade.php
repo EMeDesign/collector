@@ -120,7 +120,7 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Sent Friendships Information') }}
+                                {{ __('friend.sent-friend-information') }}
                             </h2>
                             <x-ts-button class="mt-5 mb-5"
                                          type="button"

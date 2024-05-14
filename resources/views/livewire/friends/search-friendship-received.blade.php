@@ -157,7 +157,7 @@ class extends Component {
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('friend.sent-friend-information') }}
+                                {{ __('friend.received-friend-information') }}
                             </h2>
                             <x-ts-button class="mt-5 mb-5"
                                          type="button"
