@@ -93,11 +93,10 @@ class extends Component {
      * @return array
      */
     #[Computed()]
-    public function userOptions(): array
+    public function friendOptions(): array
     {
-        return User::query()
-            ->where('id', '!=', auth()->user()->id)
-            ->get()
+        return auth()->user()
+            ->getFriends()
             ->map(function (User $user) {
                 $user->description = $user->email;
                 return $user;
@@ -363,7 +362,7 @@ class extends Component {
                                     <form wire:submit="share({{ $row->id }})">
                                         <x-ts-select.styled label="{{ __('friend.select-user-to-request') }}"
                                                             hint="{{ __('friend.choose-only-one') }}"
-                                                            :options="$this->userOptions"
+                                                            :options="$this->friendOptions"
                                                             select="label:name|value:id"
                                                             wire:model.live="recipient_id"
                                                             searchable
