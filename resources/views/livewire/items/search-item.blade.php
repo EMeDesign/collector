@@ -380,12 +380,11 @@ class extends Component {
                                             </x-danger-button>
                                         </div>
                                     </form>
-
                                 </x-ts-modal>
 
                                 <x-ts-button round
                                              color="green"
-                                             icon="pencil"
+                                             icon="share"
                                              position="left"
                                              wire:click.prevent="$toggle('modal')"
                                 >
