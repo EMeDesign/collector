@@ -23,6 +23,18 @@ class extends Component {
 
     public bool $modal;
 
+    public int $owner = 0;
+
+    public int $categoryId = 0;
+
+    public array $keywords = [];
+
+    public array $ownerOptions = [
+        ['id' => 0, 'name' => '所有的'],
+        ['id' => 1, 'name' => '仅自己的'],
+        ['id' => 2, 'name' => '非自己的']
+    ];
+
     public int $recipient_id = 0;
 
     /**
@@ -55,6 +67,27 @@ class extends Component {
      * @var array|null
      */
     public ?array $furnitureId = [];
+
+    /**
+     * @return array
+     */
+    #[Computed()]
+    public function keywordOptions(): array
+    {
+        return auth()->user()
+            ->keywords()
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    #[Computed()]
+    public function categoryOptions(): array
+    {
+        return \App\Models\Category::all()->toArray();
+    }
 
     /**
      * @return array
@@ -102,11 +135,21 @@ class extends Component {
     public function Items(): LengthAwarePaginator
     {
         return Item::query()
-            ->where(
-                fn (Builder $query) => $query
-                    ->where('user_id', auth()->user()->id)
-                    ->orWhere('owner_id', auth()->user()->id)
-            )
+            ->where('user_id', auth()->user()->id)
+            ->when(!empty($this->owner), function (Builder $query) {
+                return match ($this->owner) {
+                    1 => $query->where('owner_id', 0),
+                    2 => $query->where('owner_id', '!=', 0)
+                };
+            })
+            ->when(!empty($this->keywords), function (Builder $query) {
+                return $query->whereHas('keywords', function (Builder $query) {
+                    $query->whereIn('name', $this->keywords);
+                });
+            })
+            ->when(!empty($this->categoryId), function (Builder $query) {
+                return $query->where('category_id', $this->categoryId);
+            })
             ->when($this->search, function (Builder $query) {
                 return $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
             })
@@ -218,6 +261,11 @@ class extends Component {
                     'sortable' => false
                 ],
                 [
+                    'index' => 'owner.name',
+                    'label' => trans('item.owner-table'),
+                    'sortable' => false
+                ],
+                [
                     'index' => 'actions',
                     'label' => trans('tallstackui.actions'),
                     'sortable' => false
@@ -254,16 +302,50 @@ class extends Component {
                             </x-ts-button>
                         </header>
 
-                        <div class="w-1/4 sm:w-1/5">
-                            <x-ts-select.styled :options="$this->furniture"
-                                                :label="__('item.furniture')"
-                                                select="label:name|value:id"
-                                                placeholder="{{ __('item.filter-with-furniture') }}"
-                                                wire:model.live="furnitureId"
-                                                searchable
-                                                multiple
-                            />
+                        <div class="mb-3 mt-3 flex justify-between">
+                            <div class="w-1/4 sm:w-1/5">
+                                <x-ts-select.styled :options="$this->furniture"
+                                                    :label="__('item.furniture')"
+                                                    select="label:name|value:id"
+                                                    placeholder="{{ __('item.filter-with-furniture') }}"
+                                                    wire:model.live="furnitureId"
+                                                    searchable
+                                                    multiple
+                                />
+                            </div>
+
+                            <div class="w-1/4 sm:w-1/5">
+                                <x-ts-select.styled :options="$this->categoryOptions"
+                                                    :label="__('item.category')"
+                                                    select="label:name|value:id"
+                                                    placeholder="{{ __('item.filter-with-category') }}"
+                                                    wire:model.live="categoryId"
+                                                    searchable
+                                />
+                            </div>
+
+                            <div class="w-1/4 sm:w-1/5">
+                                <x-ts-select.styled :options="$this->ownerOptions"
+                                                    :label="__('item.owner')"
+                                                    select="label:name|value:id"
+                                                    placeholder="{{ __('item.filter-with-owner') }}"
+                                                    wire:model.live="owner"
+                                                    required
+                                />
+                            </div>
+
+                            <div class="w-1/4 sm:w-1/5">
+                                <x-ts-select.styled :options="$this->keywordOptions"
+                                                    :label="__('item.keyword')"
+                                                    select="label:name|value:name"
+                                                    placeholder="{{ __('item.filter-with-keyword') }}"
+                                                    wire:model.live="keywords"
+                                                    searchable
+                                                    multiple
+                                />
+                            </div>
                         </div>
+
 
                         <x-ts-table :$headers :$rows :$sort striped filter paginate id="items">
                             @interact('column_image', $row)

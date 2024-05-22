@@ -24,6 +24,19 @@ trait Item
     }
 
     /**
+     * Get the owner of the item.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id', 'id', 'owner')
+            ->withDefault([
+                'name' => self::creator()->value('name')
+            ]);
+    }
+
+    /**
      * Get the furniture of the item.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

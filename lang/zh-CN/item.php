@@ -37,10 +37,16 @@ return [
     'expired_date' => '过期时间',
     'private' => '私人物品',
     'furniture' => '家具',
+    'category' => '分类',
+    'owner' => '所有者',
+    'keyword' => '关键词',
 
 
     // placeholder
     'filter-with-furniture' => '根据家具进行过滤',
+    'filter-with-category' => '根据分类进行过滤',
+    'filter-with-owner' => '根据所有者进行过滤',
+    'filter-with-keyword' => '根据关键词进行过滤',
 
     // table
     'quantity-table' => '数量',
@@ -48,6 +54,7 @@ return [
     'name-table' => '名称',
     'description-table' => '简介',
     'furniture-table' => '家具',
+    'owner-table' => '所有者',
     'no-image' => '预览图缺失',
 
     // toast
