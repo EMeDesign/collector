@@ -56,4 +56,6 @@ return [
     'updated-success' => '物品更新成功!',
     'updated-failed' => '物品更新失败!',
     'deleted-success' => '物品删除成功!',
+    'shared-success' => '物品分享成功!',
+    'shared-failed' => '物品分享失败，未查询到目标接收者!',
 ];

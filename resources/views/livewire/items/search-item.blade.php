@@ -3,7 +3,9 @@
 use App\Models\Furniture;
 use App\Models\Item;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -18,6 +20,10 @@ class extends Component {
     use Interactions;
     use WithFileUploads;
     use WithPagination;
+
+    public bool $modal;
+
+    public int $recipient_id = 0;
 
     /**
      * Quantity per page.
@@ -39,7 +45,7 @@ class extends Component {
      * @var array
      */
     public array $sort = [
-        'column'    => 'name',
+        'column' => 'name',
         'direction' => 'asc',
     ];
 
@@ -49,6 +55,22 @@ class extends Component {
      * @var array|null
      */
     public ?array $furnitureId = [];
+
+    /**
+     * @return array
+     */
+    #[Computed()]
+    public function userOptions(): array
+    {
+        return User::query()
+            ->where('id', '!=', auth()->user()->id)
+            ->get()
+            ->map(function (User $user) {
+                $user->description = $user->email;
+                return $user;
+            })
+            ->toArray();
+    }
 
     #[Computed()]
     public function furniture(): array
@@ -80,7 +102,11 @@ class extends Component {
     public function Items(): LengthAwarePaginator
     {
         return Item::query()
-            ->where('user_id', auth()->user()->id)
+            ->where(
+                fn (Builder $query) => $query
+                    ->where('user_id', auth()->user()->id)
+                    ->orWhere('owner_id', auth()->user()->id)
+            )
             ->when($this->search, function (Builder $query) {
                 return $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
             })
@@ -119,6 +145,40 @@ class extends Component {
 
         $this->toast()
             ->success(trans('tallstackui.success'), trans('item.deleted-success'))
+            ->send();
+    }
+
+    /**
+     * Share the item.
+     *
+     * @param \App\Models\Item $item
+     *
+     * @return void
+     */
+    public function share(Item $item): void
+    {
+        try {
+            $recipient = User::findOrFail($this->recipient_id);
+        } catch (ModelNotFoundException $e) {
+            $this->toast()
+                ->success(trans('tallstackui.error'), trans('item.shared-failed'))
+                ->send();
+
+            return;
+        }
+
+
+        $info = \Illuminate\Support\Arr::except($item->attributesToArray(), ['id', 'user_id', 'owner_id', 'created_at', 'updated_at']);
+
+        $newItem = (new Item())->fill($info);
+        $newItem->user_id = $this->recipient_id;
+        $newItem->owner_id = $item->user_id;
+        $newItem->save();
+
+        $this->modal = !$this->modal;
+
+        $this->toast()
+            ->success(trans('tallstackui.success'), trans('item.shared-success'))
             ->send();
     }
 
@@ -208,7 +268,8 @@ class extends Component {
                         <x-ts-table :$headers :$rows :$sort striped filter paginate id="items">
                             @interact('column_image', $row)
                             @if($row->image)
-                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}" alt="{{ __('item.image') }}"/>
+                                <img class="inline max-w-48 max-h-48" src="{{ assetUrl($row->image)}}"
+                                     alt="{{ __('item.image') }}"/>
                             @else
                                 {{ __('item.no-image') }}
                             @endif
@@ -216,6 +277,39 @@ class extends Component {
                             @endinteract
                             @interact('column_actions', $row)
                             <div class="flex justify-between" wire:key="$row->id">
+                                <x-ts-modal title="{{ __('tallstackui.share') }} {{ $row->name }}" persistent wire>
+                                    <form wire:submit="share({{ $row->id }})">
+                                        <x-ts-select.styled label="{{ __('friend.select-user-to-request') }}"
+                                                            hint="{{ __('friend.choose-only-one') }}"
+                                                            :options="$this->userOptions"
+                                                            select="label:name|value:id"
+                                                            wire:model.live="recipient_id"
+                                                            searchable
+                                                            required
+                                        />
+
+                                        <div class="flex justify-between items-center gap-4 mt-3">
+                                            <x-primary-button>
+                                                {{ __('tallstackui.send') }}
+                                            </x-primary-button>
+
+                                            <x-danger-button wire:click.prevent="$toggle('modal')">
+                                                {{ __('tallstackui.cancel') }}
+                                            </x-danger-button>
+                                        </div>
+                                    </form>
+
+                                </x-ts-modal>
+
+                                <x-ts-button round
+                                             color="green"
+                                             icon="pencil"
+                                             position="left"
+                                             wire:click.prevent="$toggle('modal')"
+                                >
+                                    {{ __('tallstackui.share') }}
+                                </x-ts-button>
+
                                 <x-ts-button round
                                              color="green"
                                              icon="pencil"

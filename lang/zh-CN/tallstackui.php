@@ -10,7 +10,9 @@ return [
     'file-deleted' => '文件已删除!',
     'action' => '操作',
     'actions' => '操作',
+    'share' => '分享',
     'edit' => '编辑',
     'trash' => '删除',
     'choose-file' => '选择文件',
+    'cancel' => '取消',
 ];
