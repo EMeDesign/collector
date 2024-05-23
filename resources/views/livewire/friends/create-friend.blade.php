@@ -16,7 +16,7 @@ class extends Component {
     /**
      * @var int|null
      */
-    public ?int $recipient_id;
+    public ?int $recipient_id = 0;
 
     /**
      * @return array
@@ -46,7 +46,7 @@ class extends Component {
             $recipient = User::findOrFail($this->recipient_id);
         } catch (ModelNotFoundException $e) {
             $this->toast()
-                ->success(trans('tallstackui.error'), trans('friend.user-not-found'))
+                ->error(trans('tallstackui.error'), trans('friend.user-not-found'))
                 ->send();
 
             return;

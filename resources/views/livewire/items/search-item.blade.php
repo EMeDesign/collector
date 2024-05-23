@@ -209,7 +209,7 @@ class extends Component {
 
         } catch (ModelNotFoundException $e) {
             $this->toast()
-                ->success(trans('tallstackui.error'), trans('item.shared-failed'))
+                ->error(trans('tallstackui.error'), trans('item.shared-failed'))
                 ->send();
 
             $this->dispatch('close-modal');
@@ -222,7 +222,7 @@ class extends Component {
             $item = Item::findOrFail($this->share_item_id);
         } catch (ModelNotFoundException $e) {
             $this->toast()
-                ->success(trans('tallstackui.error'), trans('item.shared-failed-item-not-found'))
+                ->error(trans('tallstackui.error'), trans('item.shared-failed-item-not-found'))
                 ->send();
 
             $this->dispatch('close-modal');
@@ -235,7 +235,7 @@ class extends Component {
             // check revers
             if ($this->recipient_id === $item->owner_id) {
                 $this->toast()
-                    ->success(trans('tallstackui.error'), trans('item.shared-failed-reverse'))
+                    ->error(trans('tallstackui.error'), trans('item.shared-failed-reverse'))
                     ->send();
 
                 $this->dispatch('close-modal');
@@ -244,7 +244,7 @@ class extends Component {
             }
 
             $this->toast()
-                ->success(trans('tallstackui.error'), trans('item.shared-failed-repost'))
+                ->error(trans('tallstackui.error'), trans('item.shared-failed-repost'))
                 ->send();
 
             $this->dispatch('close-modal');
@@ -264,7 +264,7 @@ class extends Component {
                 ->exists()
         ) {
             $this->toast()
-                ->success(trans('tallstackui.error'), trans('item.shared-failed-repeat'))
+                ->error(trans('tallstackui.error'), trans('item.shared-failed-repeat'))
                 ->send();
 
             $this->dispatch('close-modal');
