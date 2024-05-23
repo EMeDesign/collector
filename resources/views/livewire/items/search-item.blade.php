@@ -209,12 +209,16 @@ class extends Component {
                     ->success(trans('tallstackui.error'), trans('item.shared-failed-reverse'))
                     ->send();
 
+                $this->modal = !$this->modal;
+
                 return;
             }
 
             $this->toast()
                 ->success(trans('tallstackui.error'), trans('item.shared-failed-repost'))
                 ->send();
+
+            $this->modal = !$this->modal;
 
             return;
         }
@@ -226,6 +230,8 @@ class extends Component {
             $this->toast()
                 ->success(trans('tallstackui.error'), trans('item.shared-failed'))
                 ->send();
+
+            $this->modal = !$this->modal;
 
             return;
         }
@@ -244,6 +250,8 @@ class extends Component {
             $this->toast()
                 ->success(trans('tallstackui.error'), trans('item.shared-failed-repeat'))
                 ->send();
+
+            $this->modal = !$this->modal;
 
             return;
         }
