@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -40,7 +41,17 @@ class extends Component {
      */
     public function create(): void
     {
-        $recipient = User::findOrFail($this->recipient_id);
+        // check recipient exists
+        try {
+            $recipient = User::findOrFail($this->recipient_id);
+        } catch (ModelNotFoundException $e) {
+            $this->toast()
+                ->success(trans('tallstackui.error'), trans('friend.user-not-found'))
+                ->send();
+
+            return;
+        }
+
         $sender = auth()->user();
 
         // check if self request
@@ -62,7 +73,7 @@ class extends Component {
         // check if repeat
         if ($sender->hasSentFriendRequestTo($recipient)) {
             $this->toast()
-                ->error(trans('tallstackui.error'),  trans('friend.already-send-request', ['name' => $recipient->name]))
+                ->error(trans('tallstackui.error'), trans('friend.already-send-request', ['name' => $recipient->name]))
                 ->send();
             return;
         }

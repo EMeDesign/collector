@@ -36,6 +36,7 @@ return [
     'request-date' => '申请日期',
 
     // toast
+    'user-not-found' => '未查询到该用户的存在!',
     'cannot-send-self' => '不能向自己发送好友申请!',
     'already-friend' => '你已经是 :name 的好友了!',
     'already-send-request' => '你已经向 :name 发送过好友申请了!',
