@@ -21,8 +21,6 @@ class extends Component {
     use WithFileUploads;
     use WithPagination;
 
-    public bool $modal;
-
     public int $owner = 0;
 
     public int $categoryId = 0;
@@ -36,6 +34,7 @@ class extends Component {
     ];
 
     public int $recipient_id = 0;
+    public int $share_item_id = 0;
 
     /**
      * Quantity per page.
@@ -192,24 +191,54 @@ class extends Component {
             ->send();
     }
 
+    public function setSharedItemId(int $itemId): void
+    {
+        $this->share_item_id = $itemId;
+    }
+
     /**
      * Share the item.
      *
-     * @param \App\Models\Item $item
-     *
      * @return void
      */
-    public function share(Item $item): void
+    public function share(): void
     {
+        // check recipient exists
+        try {
+            $recipient = User::findOrFail($this->recipient_id);
+
+        } catch (ModelNotFoundException $e) {
+            $this->toast()
+                ->success(trans('tallstackui.error'), trans('item.shared-failed'))
+                ->send();
+
+            $this->dispatch('close-modal');
+
+            return;
+        }
+
+        // check recipient exists
+        try {
+            $item = Item::findOrFail($this->share_item_id);
+        } catch (ModelNotFoundException $e) {
+            $this->toast()
+                ->success(trans('tallstackui.error'), trans('item.shared-failed-item-not-found'))
+                ->send();
+
+            $this->dispatch('close-modal');
+
+            return;
+        }
+
         // check repost
-        if ($item->owner_id !== $item->user_id) {
+        if ($item->owner_id !== 0) {
             // check revers
             if ($this->recipient_id === $item->owner_id) {
                 $this->toast()
                     ->success(trans('tallstackui.error'), trans('item.shared-failed-reverse'))
                     ->send();
 
-                $this->modal = !$this->modal;
+                $this->dispatch('close-modal');
 
                 return;
             }
@@ -218,20 +247,7 @@ class extends Component {
                 ->success(trans('tallstackui.error'), trans('item.shared-failed-repost'))
                 ->send();
 
-            $this->modal = !$this->modal;
-
-            return;
-        }
-
-        // check recipient exists
-        try {
-            $recipient = User::findOrFail($this->recipient_id);
-        } catch (ModelNotFoundException $e) {
-            $this->toast()
-                ->success(trans('tallstackui.error'), trans('item.shared-failed'))
-                ->send();
-
-            $this->modal = !$this->modal;
+            $this->dispatch('close-modal');
 
             return;
         }
@@ -251,7 +267,7 @@ class extends Component {
                 ->success(trans('tallstackui.error'), trans('item.shared-failed-repeat'))
                 ->send();
 
-            $this->modal = !$this->modal;
+            $this->dispatch('close-modal');
 
             return;
         }
@@ -265,7 +281,7 @@ class extends Component {
 
         $recipient->notifyNow(new \App\Notifications\ShareItemNotification($newItem));
 
-        $this->modal = !$this->modal;
+        $this->dispatch('close-modal');
 
         $this->toast()
             ->success(trans('tallstackui.success'), trans('item.shared-success'))
@@ -405,35 +421,13 @@ class extends Component {
 
                             @endinteract
                             @interact('column_actions', $row)
-                            <div class="flex justify-between" wire:key="$row->id">
-                                <x-ts-modal title="{{ __('tallstackui.share') }} {{ $row->name }}" persistent wire>
-                                    <form wire:submit="share({{ $row->id }})">
-                                        <x-ts-select.styled label="{{ __('friend.select-user-to-request') }}"
-                                                            hint="{{ __('friend.choose-only-one') }}"
-                                                            :options="$this->friendOptions"
-                                                            select="label:name|value:id"
-                                                            wire:model.live="recipient_id"
-                                                            searchable
-                                                            required
-                                        />
-
-                                        <div class="flex justify-between items-center gap-4 mt-3">
-                                            <x-primary-button>
-                                                {{ __('tallstackui.send') }}
-                                            </x-primary-button>
-
-                                            <x-danger-button wire:click.prevent="$toggle('modal')">
-                                                {{ __('tallstackui.cancel') }}
-                                            </x-danger-button>
-                                        </div>
-                                    </form>
-                                </x-ts-modal>
-
+                            <div class="flex justify-between" wire:key="{{ $row->id }}">
                                 <x-ts-button round
                                              color="green"
                                              icon="share"
                                              position="left"
-                                             wire:click.prevent="$toggle('modal')"
+                                             wire:click="setSharedItemId({{ $row->id }})"
+                                             x-on:click="$modalOpen('modal-id')"
                                 >
                                     {{ __('tallstackui.share') }}
                                 </x-ts-button>
@@ -460,9 +454,45 @@ class extends Component {
                             </div>
                             @endinteract
                         </x-ts-table>
+                        <x-ts-modal id="modal-id"
+                                    title="{{ __('tallstackui.share-item') }}"
+                                    persistent
+                                    wire:ignore.self
+                        >
+                            <form wire:submit="share()">
+                                <x-ts-select.styled label="{{ __('friend.select-user-to-request') }}"
+                                                    hint="{{ __('friend.choose-only-one') }}"
+                                                    :options="$this->friendOptions"
+                                                    select="label:name|value:id"
+                                                    wire:model.live="recipient_id"
+                                                    searchable
+                                                    required
+                                />
+
+                                <div class="flex justify-between items-center gap-4 mt-3">
+                                    <x-primary-button>
+                                        {{ __('tallstackui.send') }}
+                                    </x-primary-button>
+
+                                    <x-danger-button x-on:click.prevent="$modalClose('modal-id')">
+                                        {{ __('tallstackui.cancel') }}
+                                    </x-danger-button>
+                                </div>
+                            </form>
+                        </x-ts-modal>
                     </section>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@script
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('close-modal', (event) => {
+            $modalClose('modal-id');
+        });
+    });
+</script>
+@endscript

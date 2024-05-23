@@ -67,5 +67,6 @@ return [
     'shared-failed-reverse' => '物品分享失败，您不能将该物品分享给其所有者!',
     'shared-failed-repost' => '物品分享失败，您不能将该物品分享给第三者!',
     'shared-failed' => '物品分享失败，未查询到目标接收者!',
+    'shared-failed-item-not-found' => '物品分享失败，未查询到所选的物品!',
     'shared-failed-repeat' => '物品重复分享!',
 ];

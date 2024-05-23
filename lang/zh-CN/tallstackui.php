@@ -11,6 +11,7 @@ return [
     'action' => '操作',
     'actions' => '操作',
     'share' => '分享',
+    'share-item' => '分享物品',
     'edit' => '编辑',
     'trash' => '删除',
     'choose-file' => '选择文件',
