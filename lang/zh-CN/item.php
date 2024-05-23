@@ -65,4 +65,5 @@ return [
     'deleted-success' => '物品删除成功!',
     'shared-success' => '物品分享成功!',
     'shared-failed' => '物品分享失败，未查询到目标接收者!',
+    'shared-failed-repeat' => '物品重复分享!',
 ];

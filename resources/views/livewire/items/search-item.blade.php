@@ -211,13 +211,31 @@ class extends Component {
             return;
         }
 
+        $attributes =  $item->attributesToArray();
 
-        $info = \Illuminate\Support\Arr::except($item->attributesToArray(), ['id', 'user_id', 'owner_id', 'created_at', 'updated_at']);
+        if (
+            $recipient->items()
+                ->where('owner_id', $attributes['user_id'])
+                ->where('name', $attributes['name'])
+                ->where('furniture_id', $attributes['furniture_id'])
+                ->where('category_id', $attributes['category_id'])
+                ->exists()
+        ) {
+            $this->toast()
+                ->success(trans('tallstackui.error'), trans('item.shared-failed-repeat'))
+                ->send();
+
+            return;
+        }
+
+        $info = \Illuminate\Support\Arr::except($attributes, ['id', 'user_id', 'owner_id', 'created_at', 'updated_at']);
 
         $newItem = (new Item())->fill($info);
         $newItem->user_id = $this->recipient_id;
         $newItem->owner_id = $item->user_id;
         $newItem->save();
+
+        $recipient->notifyNow(new \App\Notifications\ShareItemNotification($newItem));
 
         $this->modal = !$this->modal;
 
