@@ -21,7 +21,7 @@ class ItemForm extends Form
     public string $description;
 
     #[Validate(rule: 'required|int|numeric', onUpdate: false)]
-    public int $quantity;
+    public string|int $quantity;
 
     #[Validate(rule: 'required|int|numeric|exists:units,id', onUpdate: false)]
     public int $unit_id;

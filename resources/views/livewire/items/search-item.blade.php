@@ -201,6 +201,25 @@ class extends Component {
      */
     public function share(Item $item): void
     {
+        // check repost
+        if ($item->owner_id !== $item->user_id) {
+            // check revers
+            if ($this->recipient_id === $item->owner_id) {
+                $this->toast()
+                    ->success(trans('tallstackui.error'), trans('item.shared-failed-reverse'))
+                    ->send();
+
+                return;
+            }
+
+            $this->toast()
+                ->success(trans('tallstackui.error'), trans('item.shared-failed-repost'))
+                ->send();
+
+            return;
+        }
+
+        // check recipient exists
         try {
             $recipient = User::findOrFail($this->recipient_id);
         } catch (ModelNotFoundException $e) {
@@ -213,6 +232,7 @@ class extends Component {
 
         $attributes =  $item->attributesToArray();
 
+        // check repeat
         if (
             $recipient->items()
                 ->where('owner_id', $attributes['user_id'])
