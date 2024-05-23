@@ -2,6 +2,7 @@
 
 use App\Models\Furniture;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
@@ -9,6 +10,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Multicaret\Acquaintances\Models\Friendship;
 use TallStackUi\Traits\Interactions;
 
 new
@@ -50,7 +52,15 @@ class extends Component {
     #[Computed]
     public function friends(): LengthAwarePaginator
     {
-        return auth()->user()->getFriends(perPage: $this->quantity);
+        $closure = function ($query) {
+            $query->when($this->search, function (Builder $query) {
+                return $query->where(function (Builder $query) {
+                    $query->where('name', 'like', "%{$this->search}%")->orWhere('email', 'like', "%{$this->search}%");
+                });
+            });
+        };
+
+        return auth()->user()->getFriendsPaginator($closure, $this->quantity);
     }
 
     /**
@@ -62,7 +72,7 @@ class extends Component {
      */
     public function unfriend(int $friendId): void
     {
-        $friend = \App\Models\User::findOrFail($friendId);
+        $friend = User::findOrFail($friendId);
 
         auth()->user()->unfriend($friend);
 
