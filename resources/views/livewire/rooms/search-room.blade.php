@@ -82,7 +82,9 @@ class extends Component {
             ->with('construction')
             ->where('user_id', auth()->user()->id)
             ->when($this->search, function (Builder $query) {
-                return $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
+                return $query->where(function (Builder $query) {
+                    $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
+                });
             })
             ->when($this->constructionId, function (Builder $query) {
                 return $query->whereIn('construction_id', $this->constructionId);

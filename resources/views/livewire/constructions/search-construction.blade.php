@@ -52,7 +52,9 @@ class extends Component {
         return Construction::query()
             ->Creator()
             ->when($this->search, function (Builder $query) {
-                return $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
+                return $query->where(function (Builder $query) {
+                    $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
+                });
             })
             ->when(
                 value: in_array($this->sort['column'], ['name', 'description']),

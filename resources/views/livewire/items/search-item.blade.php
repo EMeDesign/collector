@@ -150,7 +150,9 @@ class extends Component {
                 return $query->where('category_id', $this->categoryId);
             })
             ->when($this->search, function (Builder $query) {
-                return $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
+                return $query->where(function (Builder $query) {
+                    $query->where('name', 'like', "%{$this->search}%")->orWhere('description', 'like', "%{$this->search}%");
+                });
             })
             ->when($this->furnitureId, function (Builder $query) {
                 return $query->whereIn('furniture_id', $this->furnitureId);
