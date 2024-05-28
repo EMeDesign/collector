@@ -132,6 +132,8 @@ class extends Component {
             }
         }
 
+        $furniture->delete();
+
         $this->toast()
             ->success(
                 trans('tallstackui.success'),
