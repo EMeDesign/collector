@@ -116,7 +116,20 @@ class extends Component {
         $this->authorize('delete', $room);
 
         if ($withFurniture) {
-            $room->furniture()->delete();
+            $room->furniture()->each(function (\App\Models\Furniture $furniture) {
+                foreach ($furniture->items as $item) {
+                    $item->furniture()->dissociate();
+                    $item->save();
+                }
+
+                $furniture->delete();
+
+                $this->toast()
+                    ->success(trans('tallstackui.success'), trans('furniture.deleted-success'))
+                    ->send();
+
+                return true;
+            });
         } else {
             foreach ($room->furniture as $furniture) {
                 $furniture->room()->dissociate();

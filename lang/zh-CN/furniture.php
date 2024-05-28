@@ -4,6 +4,14 @@ return [
     // button
     'new-furniture' => '新建家具',
 
+    // drop down confirm
+    'delete-with-item-confirm' => '您确定要删除该家具及其物品吗?',
+    'delete-without-item-confirm' => '您确定要删除该家具吗?',
+
+    // drop down text
+    'delete-with-item' => '和物品一并删除',
+    'delete-without-item' => '删除并保留物品',
+
     // header
     'furniture' => '家具',
     'furniture-information' => '家具信息',
@@ -44,4 +52,5 @@ return [
     'updated-success' => '家具更新成功!',
     'updated-failed' => '家具更新失败!',
     'deleted-success' => '家具删除成功!',
+    'deleted-with-item' => '家具及其物品删除成功!',
 ];

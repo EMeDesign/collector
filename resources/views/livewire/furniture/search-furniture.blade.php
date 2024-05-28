@@ -105,19 +105,40 @@ class extends Component {
      * Delete the furniture.
      *
      * @param int $furnitureId
+     * @param bool $withItem
      *
      * @return void
      */
-    public function delete(int $furnitureId): void
+    public function delete(int $furnitureId, bool $withItem = false): void
     {
         $furniture = Furniture::findOrFail($furnitureId);
 
         $this->authorize('delete', $furniture);
 
-        $furniture->delete();
+        if ($withItem) {
+            $furniture->items()->each(function (\App\Models\Item $item) {
+                $item->delete();
+
+                $this->toast()
+                    ->success(trans('tallstackui.success'), trans('item.deleted-success'))
+                    ->send();
+
+                return true;
+            });
+        } else {
+            foreach ($furniture->items as $item) {
+                $item->furniture()->dissociate();
+                $item->save();
+            }
+        }
 
         $this->toast()
-            ->success(trans('tallstackui.success'), trans('furniture.deleted-success'))
+            ->success(
+                trans('tallstackui.success'),
+                $withItem
+                    ? trans('furniture.deleted-with-item')
+                    : trans('furniture.deleted-success')
+            )
             ->send();
     }
 
@@ -225,14 +246,29 @@ class extends Component {
                                     {{ __('tallstackui.edit') }}
                                 </x-ts-button>
 
-                                <x-ts-button round
-                                             color="red"
-                                             icon="trash"
-                                             position="left"
-                                             wire:click="delete({{ $row->id }})"
-                                >
-                                    {{ __('tallstackui.trash') }}
-                                </x-ts-button>
+                                <x-ts-dropdown position="bottom">
+                                    <x-slot:action>
+                                        <x-ts-button x-on:click="show = !show"
+                                                     round
+                                                     color="red"
+                                                     icon="trash"
+                                                     position="left"
+                                        >
+                                            {{ __('tallstackui.trash') }}
+                                        </x-ts-button>
+                                    </x-slot:action>
+                                    <x-ts-dropdown.items icon="trash"
+                                                         text="{{ __('furniture.delete-without-item') }}"
+                                                         wire:click="delete({{ $row->id }})"
+                                                         wire:confirm="{{ __('furniture.delete-without-item-confirm') }}"
+                                    />
+                                    <x-ts-dropdown.items icon="trash"
+                                                         text="{{ __('furniture.delete-with-item') }}"
+                                                         wire:click="delete({{ $row->id }}, true)"
+                                                         wire:confirm="{{ __('furniture.delete-with-item-confirm') }}"
+                                                         separator
+                                    />
+                                </x-ts-dropdown>
                             </div>
                             @endinteract
                         </x-ts-table>
