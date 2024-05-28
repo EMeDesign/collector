@@ -40,10 +40,11 @@ class RoomController extends Controller
         $this->authorize('create', Room::class);
 
         $data = $request->validate([
-            'name'        => ['required', 'string', 'between:1,255'],
-            'image'       => ['nullable', 'image', 'max:1024'],
-            'description' => ['required', 'string', 'min:3'],
-            'position'    => ['required', 'int', 'numeric'],
+            'name'            => ['required', 'string', 'between:1,255'],
+            'image'           => ['nullable', 'image', 'max:1024'],
+            'description'     => ['required', 'string', 'min:3'],
+            'position'        => ['required', 'int', 'numeric'],
+            'construction_id' => ['required', 'int', 'numeric', 'exists:constructions,id']
         ]);
 
         return new RoomResource($request->user()->rooms()->create($data));
@@ -76,10 +77,11 @@ class RoomController extends Controller
         $this->authorize('update', $room);
 
         $data = $request->validate([
-            'name'        => ['required', 'alpha_dash', 'between:1,255'],
-            'image'       => ['nullable'],
-            'description' => ['required', 'alpha_dash', 'min:3'],
-            'position'    => ['required', 'int', 'numeric'],
+            'name'            => ['required', 'string', 'between:1,255'],
+            'image'           => ['nullable', 'image', 'max:1024'],
+            'description'     => ['required', 'string', 'min:3'],
+            'position'        => ['required', 'int', 'numeric'],
+            'construction_id' => ['required', 'int', 'numeric', 'exists:constructions,id']
         ]);
 
         $room->update($data);
